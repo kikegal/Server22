@@ -1,13 +1,24 @@
 
 import {pool} from '../db.js'
 
-
-/*export const getTours1 = async (req, res) => {
-    const [rows] = await pool.query('SELECT * FROM tours')
-    res.json(rows)
-}*/
-
 export const getTours = async (req, res) => {
+    
+  try {
+    const [rows] = await pool.query('SELECT * FROM tours')
+  
+  if (rows.length <= 0) return res.status(404).json ({
+      message: 'Tour not found'
+  })
+  res.json(rows)
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Something goes wrong'
+    })
+  }
+}
+
+
+export const getToursById = async (req, res) => {
     
     try {
       const [rows] = await pool.query('SELECT * FROM tours WHERE id = ?', [req.params.id])
